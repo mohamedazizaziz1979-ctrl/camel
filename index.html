@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار مفردات الشخصية والحياة - Vocabulary Test</title>
+    <style>
+        :root {
+            --primary-blue: #2a3a83; /* الكحلي للأرقام والنصوص */
+            --light-blue: #f0f7ff; /* خلفية خفيفة خلف حقول الإدخال */
+            --accent-purple: #9257ac; /* البنفسجي */
+            --teal: #1db1ab; /* الأخضر المزرق */
+            --yellow: #ffeb3b; /* الأصفر */
+            --border-radius: 10px;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .test-wrapper {
+            width: 100%;
+            max-width: 900px;
+            background: white;
+            border: 3px solid #e0e0e0;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        /* رأس الصفحة (الترويسة) */
+        header {
+            background-color: var(--primary-blue);
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 5px solid var(--teal);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+            line-height: 1.2;
+        }
+
+        header p {
+            margin: 0;
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .purple-label {
+            background-color: var(--accent-purple);
+            padding: 10px 20px;
+            border-radius: 8px;
+            transform: rotate(-3deg);
+            display: inline-block;
+            margin-right: 20px;
+        }
+
+        .lamp-icon {
+            font-size: 30px;
+            margin-right: 20px;
+        }
+
+        /* حقول البيانات (الاسم، الفصل، الدرجة) */
+        .info-bar {
+            padding: 15px 30px;
+            border-bottom: 2px solid #eee;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 20px;
+            background-color: #fafafa;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #555;
+            font-weight: bold;
+        }
+
+        .info-input {
+            flex-grow: 1;
+            border: none;
+            border-bottom: 2px dotted #ccc;
+            padding: 5px;
+            background: transparent;
+            font-size: 16px;
+        }
+
+        .score-box {
+            justify-content: flex-end;
+            font-weight: bold;
+            color: var(--primary-blue);
+        }
+
+        .score-value {
+            color: var(--accent-purple);
+            font-size: 1.2em;
+        }
+
+        /* تخطيط الأسئلة (العمودان) */
+        .questions-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            padding: 30px;
+        }
+
+        .question-col {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .question-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .question-num {
+            width: 35px;
+            height: 35px;
+            background-color: var(--primary-blue);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .word-ar {
+            width: 130px; /* العرض الثابت للكلمات العربية */
+            text-align: right;
+            font-weight: bold;
+            color: var(--primary-blue);
+            font-size: 1.1em;
+        }
+
+        .word-en {
+            flex-grow: 1;
+            border: none;
+            border-bottom: 2px dotted #aaa;
+            padding: 8px;
+            background-color: var(--light-blue);
+            border-radius: 5px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .word-en:focus {
+            background-color: #fff;
+            outline: 2px solid var(--primary-blue);
+        }
+
+        /* تنسيقات التصحيح */
+        .correct {
+            background-color: #c8e6c9; /* أخضر فاتح */
+            border-bottom-color: green;
+        }
+
+        .incorrect {
+            background-color: #ffcdd2; /* أحمر فاتح */
+            border-bottom-color: red;
+        }
+
+        .feedback-correct {
+            color: green;
+            font-size: 14px;
+            margin-right: 5px;
+        }
+
+        .feedback-incorrect {
+            color: red;
+            font-size: 14px;
+            margin-right: 5px;
+        }
+
+        /* زر التحقق من الإجابات */
+        .check-btn-container {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .check-btn {
+            background-color: var(--teal);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .check-btn:hover {
+            background-color: var(--primary-blue);
+        }
+
+        /* ذيل الصفحة (التوقيع) */
+        footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background-color: #fafafa;
+            border-top: 2px solid #eee;
+        }
+
+        .quote {
+            background-color: var(--accent-purple);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            position: relative;
+            font-style: italic;
+        }
+
+        .quote::before {
+            content: "“";
+            font-size: 40px;
+            color: rgba(255,255,255,0.4);
+            position: absolute;
+            left: 5px;
+            top: -10px;
+        }
+
+        .keep-growing {
+            background-color: var(--teal);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* شاشات الهواتف المحمولة */
+        @media (max-width: 768px) {
+            .questions-container {
+                grid-template-columns: 1fr;
+            }
+            .info-bar {
+                grid-template-columns: 1fr;
+            }
+            .info-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .word-ar {
+                width: auto;
+                margin-bottom: 5px;
+            }
+            .question-row {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="test-wrapper">
+        <header>
+            <div class="header-content">
+                <span class="lamp-icon">💡</span>
+                <div>
+                    <h1>مُفردات : الشَّخصِية والحَياة</h1>
+                    <p>Personal & Social Topics</p>
+                </div>
+            </div>
+            <div class="purple-label">
+                <h1>VOCABULARY<br>TEST</h1>
+            </div>
+        </header>
+
+        <div class="info-bar">
+            <div class="info-item"><span>Name:</span><input type="text" class="info-input"></div>
+            <div class="info-item"><span>Class:</span><input type="text" class="info-input"></div>
+            <div class="info-item score-box"><span>Score:</span><span id="score-display">______</span> / 40</div>
+        </div>
+
+        <form id="vocabularyTest">
+            <div class="questions-container">
+                <!-- العمود الأول -->
+                <div class="question-col">
+                    <!-- Q1 - Q20 -->
+                    <div class="question-row"><div class="question-num">1</div><div class="word-ar">: هوية</div><input type="text" class="word-en" id="q1"></div>
+                    <div class="question-row"><div class="question-num">2</div><div class="word-ar">: معتقدات / مبادئ</div><input type="text" class="word-en" id="q2"></div>
+                    <div class="question-row"><div class="question-num">3</div><div class="word-ar">: فريد / مميز</div><input type="text" class="word-en" id="q3"></div>
+                    <div class="question-row"><div class="question-num">4</div><div class="word-ar">: اكتشاف الذات</div><input type="text" class="word-en" id="q4"></div>
+                    <div class="question-row"><div class="question-num">5</div><div class="word-ar">: نقاط القوة</div><input type="text" class="word-en" id="q5"></div>
+                    <div class="question-row"><div class="question-num">6</div><div class="word-ar">: شخصية</div><input type="text" class="word-en" id="q6"></div>
+                    <div class="question-row"><div class="question-num">7</div><div class="word-ar">: تميز / تفرد</div><input type="text" class="word-en" id="q7"></div>
+                    <div class="question-row"><div class="question-num">8</div><div class="word-ar">: نمو / نضج</div><input type="text" class="word-en" id="q8"></div>
+                    <div class="question-row"><div class="question-num">9</div><div class="word-ar">: خلفية اجتماعية / النشأة</div><input type="text" class="word-en" id="q9"></div>
+                    <div class="question-row"><div class="question-num">10</div><div class="word-ar">: يقدر / يقيم / قيمة</div><input type="text" class="word-en" id="q10"></div>
+                    <div class="question-row"><div class="question-num">11</div><div class="word-ar">: الثقة</div><input type="text" class="word-en" id="q11"></div>
+                    <div class="question-row"><div class="question-num">12</div><div class="word-ar">: احترام الذات</div><input type="text" class="word-en" id="q12"></div>
+                    <div class="question-row"><div class="question-num">13</div><div class="word-ar">: نقطة ضعف</div><input type="text" class="word-en" id="q13"></div>
+                    <div class="question-row"><div class="question-num">14</div><div class="word-ar">: قوة</div><input type="text" class="word-en" id="q14"></div>
+                    <div class="question-row"><div class="question-num">15</div><div class="word-ar">: يتصرف</div><input type="text" class="word-en" id="q15"></div>
+                    <div class="question-row"><div class="question-num">16</div><div class="word-ar">: سمة / شخصية</div><input type="text" class="word-en" id="q16"></div>
+                    <div class="question-row"><div class="question-num">17</div><div class="word-ar">: وسائل التواصل الاجتماعي</div><input type="text" class="word-en" id="q17"></div>
+                    <div class="question-row"><div class="question-num">18</div><div class="word-ar">: غريب / غير مألوف</div><input type="text" class="word-en" id="q18"></div>
+                    <div class="question-row"><div class="question-num">19</div><div class="word-ar">: يتغلب على</div><input type="text" class="word-en" id="q19"></div>
+                    <div class="question-row"><div class="question-num">20</div><div class="word-ar">: يذكر</div><input type="text" class="word-en" id="q20"></div>
+                </div>
+
+                <!-- العمود الثاني -->
+                <div class="question-col">
+                    <!-- Q21 - Q40 -->
+                    <div class="question-row"><div class="question-num">21</div><div class="word-ar">: متوتر / مضغوط</div><input type="text" class="word-en" id="q21"></div>
+                    <div class="question-row"><div class="question-num">22</div><div class="word-ar">: يشكل / شكل</div><input type="text" class="word-en" id="q22"></div>
+                    <div class="question-row"><div class="question-num">23</div><div class="word-ar">: واثق بنفسه</div><input type="text" class="word-en" id="q23"></div>
+                    <div class="question-row"><div class="question-num">24</div><div class="word-ar">: تحدي</div><input type="text" class="word-en" id="q24"></div>
+                    <div class="question-row"><div class="question-num">25</div><div class="word-ar">: أهداف (في الحياة)</div><input type="text" class="word-en" id="q25"></div>
+                    <div class="question-row"><div class="question-num">26</div><div class="word-ar">: مشهور / محبوب</div><input type="text" class="word-en" id="q26"></div>
+                    <div class="question-row"><div class="question-num">27</div><div class="word-ar">: عادات / تقاليد</div><input type="text" class="word-en" id="q27"></div>
+                    <div class="question-row"><div class="question-num">28</div><div class="word-ar">: يؤثر / تأثير</div><input type="text" class="word-en" id="q28"></div>
+                    <div class="question-row"><div class="question-num">29</div><div class="word-ar">: جراح القلب</div><input type="text" class="word-en" id="q29"></div>
+                    <div class="question-row"><div class="question-num">30</div><div class="word-ar">: مرض</div><input type="text" class="word-en" id="q30"></div>
+                    <div class="question-row"><div class="question-num">31</div><div class="word-ar">: يحتفل</div><input type="text" class="word-en" id="q31"></div>
+                    <div class="question-row"><div class="question-num">32</div><div class="word-ar">: تجربة / خبرة</div><input type="text" class="word-en" id="q32"></div>
+                    <div class="question-row"><div class="question-num">33</div><div class="word-ar">: التطوع</div><input type="text" class="word-en" id="q33"></div>
+                    <div class="question-row"><div class="question-num">34</div><div class="word-ar">: يشجع</div><input type="text" class="word-en" id="q34"></div>
+                    <div class="question-row"><div class="question-num">35</div><div class="word-ar">: اختلافات</div><input type="text" class="word-en" id="q35"></div>
+                    <div class="question-row"><div class="question-num">36</div><div class="word-ar">: صفة / ميزة</div><input type="text" class="word-en" id="q36"></div>
+                    <div class="question-row"><div class="question-num">37</div><div class="word-ar">: مُلهم / مُحفز</div><input type="text" class="word-en" id="q37"></div>
+                    <div class="question-row"><div class="question-num">38</div><div class="word-ar">: يتساءل</div><input type="text" class="word-en" id="q38"></div>
+                    <div class="question-row"><div class="question-num">39</div><div class="word-ar">: الفضول</div><input type="text" class="word-en" id="q39"></div>
+                    <div class="question-row"><div class="question-num">40</div><div class="word-ar">: يدعم / يساند / دعم</div><input type="text" class="word-en" id="q40"></div>
+                </div>
+            </div>
+
+            <div class="check-btn-container">
+                <button type="button" class="check-btn" onclick="checkAnswers()">تصحيح الاختبار (Check Answers)</button>
+            </div>
+        </form>
+
+        <footer>
+            <div class="quote">
+                كل كلمة جديدة<br> تقربك من هدفك!
+            </div>
+            <div class="keep-growing">
+                <span>⭐</span>
+                Keep Learning, Keep Growing!
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // إجابات نموذجية (الكلمات الإنجليزية الشائعة)
+        // يتم استخدام قائمة لقبول إجابات متعددة للكلمة الواحدة
+        const answers = {
+            q1: ["identity"],
+            q2: ["beliefs", "principles"],
+            q3: ["unique", "distinctive"],
+            q4: ["self-discovery"],
+            q5: ["strengths"],
+            q6: ["personality"],
+            q7: ["individuality", "uniqueness"],
+            q8: ["growth", "maturity"],
+            q9: ["background", "upbringing"],
+            q10: ["value", "appreciate", "evaluate"],
+            q11: ["confidence"],
+            q12: ["self-esteem", "self-respect"],
+            q13: ["weakness", "vulnerability"],
+            q14: ["power", "strength"],
+            q15: ["behave", "act"],
+            q16: ["trait", "characteristic", "feature"],
+            q17: ["social media"],
+            q18: ["strange", "unfamiliar", "unusual"],
+            q19: ["overcome"],
+            q20: ["remind", "remember"],
+            q21: ["stressed", "tense"],
+            q22: ["shape", "form", "mold"],
+            q23: ["confident"],
+            q24: ["challenge"],
+            q25: ["goals"],
+            q26: ["popular", "liked", "beloved"],
+            q27: ["habits", "traditions", "customs"],
+            q28: ["affect", "influence", "effect"],
+            q29: ["heart surgeon"],
+            q30: ["disease", "illness", "sickness"],
+            q31: ["celebrate"],
+            q32: ["experience", "expertise"],
+            q33: ["volunteering"],
+            q34: ["encourage"],
+            q35: ["differences"],
+            q36: ["quality", "feature", "attribute", "advantage"],
+            q37: ["inspiring", "motivating"],
+            q38: ["wonder", "ask"],
+            q39: ["curiosity"],
+            q40: ["support", "back", "uphold"]
+        };
+
+        function checkAnswers() {
+            let score = 0;
+            const form = document.getElementById('vocabularyTest');
+            const scoreDisplay = document.getElementById('score-display');
+            
+            // إزالة التنسيقات السابقة إن وجدت
+            for (let i = 1; i <= 40; i++) {
+                const inputId = 'q' + i;
+                const inputElement = document.getElementById(inputId);
+                
+                // إزالة الأيقونات السابقة
+                const existingFeedback = inputElement.parentNode.querySelector('.feedback-correct, .feedback-incorrect');
+                if (existingFeedback) {
+                    existingFeedback.remove();
+                }
+                
+                inputElement.classList.remove('correct', 'incorrect');
+            }
+
+            // التحقق من كل إجابة
+            for (let i = 1; i <= 40; i++) {
+                const inputId = 'q' + i;
+                const inputElement = document.getElementById(inputId);
+                // تحويل النص للحروف الصغيرة وتنظيف المسافات الزائدة
+                const userAnswer = inputElement.value.toLowerCase().trim();
+                
+                // البحث عما إذا كان userAnswer ضمن قائمة الإجابات الصحيحة المقبولة
+                const acceptedAnswers = answers[inputId];
+                
+                if (userAnswer === "") {
+                    // إذا كان الحقل فارغاً، تركه كحالة افتراضية (بدون تصحيح)
+                    inputElement.classList.remove('correct', 'incorrect');
+                    continue; 
+                }
+
+                if (acceptedAnswers.includes(userAnswer)) {
+                    score++;
+                    inputElement.classList.add('correct');
+                    // إضافة أيقونة صح
+                    const correctIcon = document.createElement('span');
+                    correctIcon.innerHTML = "✅";
+                    correctIcon.className = "feedback-correct";
+                    inputElement.parentNode.insertBefore(correctIcon, inputElement.nextSibling);
+                } else {
+                    inputElement.classList.add('incorrect');
+                    // إضافة أيقونة خطأ مع الإجابة الصحيحة الأولى المقترحة
+                    const incorrectIcon = document.createElement('span');
+                    incorrectIcon.innerHTML = "❌ (" + acceptedAnswers[0] + ")";
+                    incorrectIcon.className = "feedback-incorrect";
+                    inputElement.parentNode.insertBefore(incorrectIcon, inputElement.nextSibling);
+                }
+            }
+
+            // تحديث عرض النتيجة
+            scoreDisplay.innerText = score;
+        }
+    </script>
+</body>
+</html>
